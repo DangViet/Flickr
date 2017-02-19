@@ -11,9 +11,10 @@ import AFNetworking
 import MBProgressHUD
 
 
-class MovieViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, UISearchBarDelegate {
+class MovieViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, UISearchBarDelegate, UICollectionViewDelegate {
 
     @IBOutlet weak var tableMovie: UITableView!
+    @IBOutlet weak var collectionMovie: UICollectionView!
     
     let baseURL = "http://image.tmdb.org/t/p/w300"
     var endpoint:String = ""
@@ -36,24 +37,34 @@ class MovieViewController: UIViewController, UITableViewDelegate, UITableViewDat
         
         segView.layer.borderColor = UIColor.white.cgColor;
         segView.layer.cornerRadius = 0.0;
-        segView.layer.borderWidth = 4;
+        segView.layer.borderWidth = 5;
         
-        // Do any additional setup after loading the view.
+        
+        // Add search bar to navigation bar
         self.naviBar.titleView = self.searchBar;
-        //self.tableMovie.tableHeaderView = self.segView
+        
     
         // Initilize table view
         tableMovie.delegate = self
         tableMovie.dataSource = self
         
+        // Initilize collection view
+        collectionMovie.delegate = self
+        collectionMovie.dataSource = self
+        
         // Initilize search bar
         searchBar.delegate = self
 
         // Initialize a UIRefreshControl
-        let refreshControl = UIRefreshControl()
-        refreshControl.addTarget(self, action: #selector(MovieViewController.refreshControlAction(_:)), for: UIControlEvents.valueChanged)
-        // add refresh control to table view
-        tableMovie.insertSubview(refreshControl, at: 0)
+        let refreshControlTable = UIRefreshControl()
+        refreshControlTable.addTarget(self, action: #selector(MovieViewController.refreshControlAction(_:)), for: UIControlEvents.valueChanged)
+        
+        let refreshControlCollection = UIRefreshControl()
+        refreshControlCollection.addTarget(self, action: #selector(MovieViewController.refreshControlAction(_:)), for: UIControlEvents.valueChanged)
+        
+        collectionMovie.insertSubview(refreshControlCollection, at:0)
+        tableMovie.insertSubview(refreshControlTable, at: 0)
+        
         
         let apiKey = "a07e22bc18f5cb106bfe4cc1f83ad8ed"
         let url = URL(string: "http://api.themoviedb.org/3/movie/\(endpoint)?api_key=\(apiKey)")
@@ -89,6 +100,7 @@ class MovieViewController: UIViewController, UITableViewDelegate, UITableViewDat
                                             self.filterMovies = self.movies
                                             
                                             self.tableMovie.reloadData()
+                                            self.collectionMovie.reloadData()
                                         }
                                     }
                                 }
@@ -146,8 +158,12 @@ class MovieViewController: UIViewController, UITableViewDelegate, UITableViewDat
     }
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         let detailView = segue.destination as! MovieDetailsViewController
+        if (segue.identifier == "tableCell") {
+            detailView.movieDetail = self.filterMovies[(self.tableMovie.indexPathForSelectedRow?.row)!]
+        } else {
+            detailView.movieDetail = self.filterMovies[((self.collectionMovie.indexPathsForSelectedItems)?[0].row)!]
+        }
         
-        detailView.movieDetail = self.filterMovies[(self.tableMovie.indexPathForSelectedRow?.row)!]
     }
     
     // Makes a network request to get updated data
@@ -182,6 +198,7 @@ class MovieViewController: UIViewController, UITableViewDelegate, UITableViewDat
                                             self.searchBar(self.searchBar, textDidChange: self.searchBar.text!)
                                             
                                             self.tableMovie.reloadData()
+                                            self.collectionMovie.reloadData()
                                             
                                         }
                                     }
@@ -207,6 +224,7 @@ class MovieViewController: UIViewController, UITableViewDelegate, UITableViewDat
         self.searchBar.text = ""
         filterMovies = movies
         self.tableMovie.reloadData()
+        self.collectionMovie.reloadData()
         self.searchBar.resignFirstResponder()
     }
     
@@ -225,8 +243,19 @@ class MovieViewController: UIViewController, UITableViewDelegate, UITableViewDat
         
         
         self.tableMovie.reloadData()
+        self.collectionMovie.reloadData()
     }
     
+    @IBAction func onSegViewChanged(_ sender: Any) {
+        let segView = sender as! UISegmentedControl
+        if(segView.selectedSegmentIndex == 0){
+            tableMovie.isHidden = false
+            collectionMovie.isHidden = true
+        } else {
+            tableMovie.isHidden = true
+            collectionMovie.isHidden = false
+        }
+    }
     override func viewWillDisappear(_ animated: Bool) {
         self.searchBar.endEditing(true)
     }
@@ -245,3 +274,23 @@ class MovieViewController: UIViewController, UITableViewDelegate, UITableViewDat
     */
 
 }
+
+
+extension MovieViewController: UICollectionViewDataSource{
+    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+        return self.filterMovies.count
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "collectionCell", for: indexPath) as! MovieCollectionViewCell
+        
+        if let imgPath = self.filterMovies[indexPath.row]["poster_path"] as? String{
+            let imgURL = baseURL + imgPath
+            cell.imgPoster.setImageWith(NSURL(string: imgURL) as! URL)
+        }
+        return cell
+    }
+    
+    
+}
+

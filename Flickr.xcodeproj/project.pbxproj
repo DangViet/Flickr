@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		151D82761E59FA1A004E5513 /* MovieCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 151D82751E59FA1A004E5513 /* MovieCollectionViewCell.swift */; };
 		1565B97B1E570E47002A8918 /* MovieDetailsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1565B97A1E570E47002A8918 /* MovieDetailsViewController.swift */; };
 		157FC5351E55B8C7007548A9 /* MovieViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 157FC5341E55B8C7007548A9 /* MovieViewCell.swift */; };
 		15DAA00A1E55608B00F4B4C4 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 15DAA0091E55608B00F4B4C4 /* AppDelegate.swift */; };
@@ -18,6 +19,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		151D82751E59FA1A004E5513 /* MovieCollectionViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MovieCollectionViewCell.swift; sourceTree = "<group>"; };
 		1565B97A1E570E47002A8918 /* MovieDetailsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MovieDetailsViewController.swift; sourceTree = "<group>"; };
 		157FC5341E55B8C7007548A9 /* MovieViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MovieViewCell.swift; sourceTree = "<group>"; };
 		15DAA0061E55608B00F4B4C4 /* Flickr.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Flickr.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -73,6 +75,7 @@
 				15DAA01B1E5561D000F4B4C4 /* MovieViewController.swift */,
 				157FC5341E55B8C7007548A9 /* MovieViewCell.swift */,
 				1565B97A1E570E47002A8918 /* MovieDetailsViewController.swift */,
+				151D82751E59FA1A004E5513 /* MovieCollectionViewCell.swift */,
 			);
 			path = Flickr;
 			sourceTree = "<group>";
@@ -220,6 +223,7 @@
 			files = (
 				1565B97B1E570E47002A8918 /* MovieDetailsViewController.swift in Sources */,
 				15DAA00A1E55608B00F4B4C4 /* AppDelegate.swift in Sources */,
+				151D82761E59FA1A004E5513 /* MovieCollectionViewCell.swift in Sources */,
 				15DAA01C1E5561D000F4B4C4 /* MovieViewController.swift in Sources */,
 				157FC5351E55B8C7007548A9 /* MovieViewCell.swift in Sources */,
 			);
